@@ -38,4 +38,8 @@ describe('postcss-strip', function () {
         test(':root{--bar: 2em;}a{test: calc(strip(var(--bar)) * 12px);}', 'a{test: 24px;}', {}, done);
     });
 
+    it('should strip a value from a media query', function (done) {
+        test('@media (width: strip(1px)) {}', '@media (width: 1) {}', {}, done);
+    });
+
 });

@@ -4,13 +4,24 @@ var transformStrip = require('./lib/transformStrip');
 
 module.exports = postcss.plugin('postcss-strip', function () {
     return function (css) {
-        css.eachDecl(function transformDecl (decl) {
-            if (!decl.value || decl.value.indexOf('strip(') === -1) {
+        function transformValue(node, property) {
+            var value = node[property];
+
+            if (!value || value.indexOf('strip(') === -1) {
                 return;
             }
-            decl.value = helpers.try(function transformStripValue () {
-                return transformStrip(decl.value);
-            }, decl.source);
+
+            helpers.try(function transformStripValue () {
+                node[property] = transformStrip(value);
+            }, node.source);
+        }
+
+        css.eachInside(function (node) {
+            if (node.type === 'atrule') {
+                return transformValue(node, 'params');
+            } else if (node.type === 'decl') {
+                return transformValue(node, 'value');
+            }
         });
     };
 });

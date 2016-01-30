@@ -16,7 +16,7 @@ module.exports = postcss.plugin('postcss-strip', function () {
             }, node.source);
         }
 
-        css.eachInside(function (node) {
+        css.walk(function (node) {
             if (node.type === 'atrule') {
                 return transformValue(node, 'params');
             } else if (node.type === 'decl') {

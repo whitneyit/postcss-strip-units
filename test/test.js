@@ -3,13 +3,21 @@ var postcss = require('postcss');
 var expect  = require('chai').expect;
 
 var test = function (input, output, opts, done) {
-    postcss([
+    var plugins = [
         require('postcss-custom-properties'),
-        require('../'),
-        require('postcss-calc')
-    ]).process(input).then(function (result) {
+        require('../')(opts.pluginOptions),
+        require('postcss-calc'),
+        require('postcss-reporter')({ clearReportedMessages : false })
+    ];
+    var processOptions = { from : 'inline string' };
+
+    postcss(plugins).process(input, processOptions).then(function (result) {
         expect(result.css).to.eql(output);
-        expect(result.warnings()).to.be.empty;
+        if (opts.numberOfWarnings === undefined) {
+            expect(result.warnings()).to.be.empty;
+        } else {
+            expect(result.warnings().length).to.equal(opts.numberOfWarnings);
+        }
         done();
     }).catch(function (error) {
         done(error);
@@ -40,6 +48,22 @@ describe('postcss-strip', function () {
 
     it('should strip a value from a media query', function (done) {
         test('@media (width: strip(1px)) {}', '@media (width: 1) {}', {}, done);
+    });
+
+    it('should result in NaN and leave original value as a result', function (done) {
+        test('@media (width: strip(a1px)) {}', '@media (width: a1px) {}', {numberOfWarnings : 1}, done);
+    });
+
+    it('nested strips', function (done) {
+        test('@media (width: strip(strip(1px))) {}', '@media (width: 1) {}', {}, done);
+    });
+
+    it('nested strips with odd whitespace', function (done) {
+        test('@media (width: strip( strip(1px   ))) {}', '@media (width: 1) {}', {}, done);
+    });
+
+    it('test functionName option', function (done) {
+        test('@media (width: removeUnit(1px   )) {}', '@media (width: 1) {}', {pluginOptions : {functionName : 'removeUnit'}}, done);
     });
 
 });

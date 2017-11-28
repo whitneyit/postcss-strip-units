@@ -11,26 +11,22 @@ function stripTransform(node, result, argString, functionIdentifier) {
 
     switch (args.length) {
         case 0:
-            result.warn(`Not enough arguments passed "${functionIdentifier}()". 
-                Expected one. Did not receive any.`, { node: node });
+            result.warn(`Not enough arguments passed "${functionIdentifier}()". Expected one. Did not receive any.`, { node: node });
             break;
         case 1:
             rawValue = args[0];
             if (rawValue === '') {
-                result.warn(`No valid arguments passed "${functionIdentifier}()".
-                    Expected one. Got "${argString}"`, { node: node });
+                result.warn(`No valid arguments passed "${functionIdentifier}()". Expected one. Got "${argString}"`, { node: node });
             }
             break;
         default:
-            result.warn(`Too many args passed to "${functionIdentifier}()". 
-                Expected one. Got "${argString}"`, { node: node });
+            result.warn(`Too many args passed to "${functionIdentifier}()". Expected one. Got "${argString}"`, { node: node });
     }
 
     parsedValue = parseFloat(rawValue);
 
     if (isNaN(parsedValue)) {
-        result.warn(`"${functionIdentifier}(${argString})" resulted in "NaN".
-            Left original value in place.`, { node: node });
+        result.warn(`"${functionIdentifier}(${argString})" resulted in "NaN". Left original value in place.`, { node: node });
         return argString;
     }
 

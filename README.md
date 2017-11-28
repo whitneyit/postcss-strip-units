@@ -64,3 +64,21 @@ postcss([
 ```
 
 See [PostCSS] docs for examples for your environment.
+
+
+## Options
+
+Example:
+```js
+const stripe = require('postcss-strip');
+const postcssPlugins = [stripe({
+	functionName : 'removeUnit'
+})]
+```
+
+### `functionName`
+
+Type: `string`  
+Default: `stripe`
+
+The name of the funciton to use in your CSS. By default it is `strip()`

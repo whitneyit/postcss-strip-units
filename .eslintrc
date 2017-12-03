@@ -2,19 +2,20 @@
     "rules": {
         "no-unused-expressions": [0],
         "no-underscore-dangle":  [0],
-        "no-reserved-keys":      [2],
+        "quote-props":           [0],
         "no-multi-spaces":       [0],
         "no-extra-parens":       [2],
         "no-unused-vars":        [2],
         "no-loop-func":          [0],
         "key-spacing":           [0],
-        "max-len":               [2],
+        "max-len":               ["error", 200],
         "strict":                [0],
-        "indent":                [2],
+        "indent":                ["error", 4, { "SwitchCase": 1 }],
         "quotes":                [2, "single", "avoid-escape"],
         "curly":                 [0]
     },
     "env": {
+        "es6": true,
         "mocha": true,
         "node":  true
     }
